@@ -5743,8 +5743,7 @@ foreach($files_to_arch as $elem){
 }
 ?>
 <hr>
-<input type="password" name="pass">
-<input type="submit" value="Start">
+<div>Password:<input type="password" name="pass"><input type="submit" value="Archive"></div>
 </form>
 <?php
 
