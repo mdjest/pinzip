@@ -1,4 +1,11 @@
-﻿<?php
+<?php 
+// --------------------------------------------------------------------------------
+// PinZip 0.2 - readme.txt
+// --------------------------------------------------------------------------------
+// License GNU/LGPL
+// Alexey Kiselev - mdjest@gmail.com
+// --------------------------------------------------------------------------------
+  session_start();
 	define('PASS', '1234567');
 ?>
 <?php
@@ -5696,8 +5703,22 @@
 
 ?>
 
-
 <?php
+if(isset($_POST['pass'])){
+  $_SESSION['pass'] = $_POST['pass'];
+}
+if(!isset($_SESSION['pass']) or $_SESSION['pass'] != PASS){
+  ?>
+  <div>
+    <form method="post">
+      <input type="password" name="pass">
+      <input type="submit" value="Enter">
+    </form>
+  </div>
+  <?php
+  exit();
+}
+
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 
 $files_dir = rtrim(ROOT, '/');
@@ -5705,13 +5726,13 @@ $files_to_arch = array();
 
 for($d = @opendir($files_dir); $file = @readdir($d);)
 {      
-    if($file!='.' && $file!='..' && $file!='inzip.php')
-    {
-		$ar = explode('_',$file);
-		if($ar[0] != 'backup'){
-			$files_to_arch[] = $file;
-		}
-    }
+  if($file!='.' && $file!='..' && $file!='inzip.php')
+  {
+    $ar = explode('_',$file);
+    if($ar[0] != 'backup'){
+     $files_to_arch[] = $file;
+   }
+ }
 }
 
 ?>
@@ -5719,7 +5740,7 @@ for($d = @opendir($files_dir); $file = @readdir($d);)
 function checkAll(obj) {
   'use strict';
   var items = obj.form.getElementsByTagName("input"), 
-      len, i;
+  len, i;
   for (i = 0, len = items.length; i < len; i += 1) {
     if (items.item(i).type && items.item(i).type === "checkbox") {
       if (obj.checked) {
@@ -5732,37 +5753,36 @@ function checkAll(obj) {
 }
 </script>
 <form method="post" name="sss">
-<input type="hidden" name="action" value="create">
-<div><label><input id="one" type="checkbox" value="all" onclick="checkAll(this)" />Select All</label></div>
-<hr>
-<?php
-foreach($files_to_arch as $elem){
-?>
-<div><label><input type="checkbox" name="dir[]" value="<?php echo $elem; ?>"><?php echo $elem; ?></label></div>
-<?php
-}
-?>
-<hr>
-<div>Password:<input type="password" name="pass"><input type="submit" value="Archive"></div>
+  <input type="hidden" name="action" value="create">
+  <div><label><input id="one" type="checkbox" value="all" onclick="checkAll(this)" />Select All</label></div>
+  <hr>
+  <?php
+  foreach($files_to_arch as $elem){
+    ?>
+    <div><label><input type="checkbox" name="dir[]" value="<?php echo $elem; ?>"><?php echo $elem; ?></label></div>
+    <?php
+  }
+  ?>
+  <hr>
+  <div><input type="submit" value="Archive"></div>
 </form>
 <?php
 
 if(isset($_POST['action']) and 'create' == $_POST['action']
-and isset($_POST['pass']) and PASS == $_POST['pass']
-){
+  ){
 
 	$date_time = date('Y-m-d_his',time());
-	$file_name = 'backup_' . $date_time . '.zip';
-	$file_path = ROOT . '/' . $file_name;
-	$files_to_arch = $_POST['dir'];
-	chdir($files_dir);
-	$archive = new PclZip($file_path);
-	$v_list = $archive->create(implode(',', $files_to_arch));
+$file_name = 'backup_' . $date_time . '.zip';
+$file_path = ROOT . '/' . $file_name;
+$files_to_arch = $_POST['dir'];
+chdir($files_dir);
+$archive = new PclZip($file_path);
+$v_list = $archive->create(implode(',', $files_to_arch));
 
-	if($v_list == 0) {
-	   die('<font color="red">Error : '.$archive->errorInfo(true)).'</font>';
-	} else {
-	   echo '<font color="green">archiving completed</font> <br> <a href="/'.$file_name.'">'.$file_name.'</a>';
-	}
+if($v_list == 0) {
+  die('<font color="red">Error : '.$archive->errorInfo(true)).'</font>';
+} else {
+  echo '<font color="green">archiving completed</font> <br> <a href="/'.$file_name.'">'.$file_name.'</a>';
+}
 }
 ?>
