@@ -36,7 +36,8 @@ if(!defined('PCLZIP_READ_BLOCK_SIZE')){define('PCLZIP_READ_BLOCK_SIZE',2048);}if
   define('FILENAME', 'pinzip.php');
   define('VERSION', '0.4');
 
-define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+//define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+define('ROOT', dirname(__FILE__));
 define('DS', DIRECTORY_SEPARATOR);
 
 $files_dir = ROOT;
